@@ -33,8 +33,8 @@ def update_auto_support_configuration():
         result = connection.post('http://{server}/devmgr/v2/auto-support/configuration'.format(server=PROPS.server), data=json.dumps(data))
         try:
             result.raise_for_status()
-        except Exception as e:
-            LOG.error("Update AutoSupport configuration attempt failed")
+        except requests.HTTPError as e:
+            LOG.error("Update AutoSupport configuration attempt failed || http status code: %s" % str(e.response.status_code))
             raise
         else:
             LOG.info("Update AutoSupport configuration attempt succeeded")
@@ -43,8 +43,8 @@ def update_auto_support_configuration():
         result = connection.get('http://{server}/devmgr/v2/auto-support/configuration'.format(server=PROPS.server))
         try:
             result.raise_for_status()
-        except:
-            LOG.error("AutoSupport configuration retrieval attempt failed")
+        except requests.HTTPError as e:
+            LOG.error("AutoSupport configuration retrieval attempt failed || http status code: %s" % str(e.response.status_code))
             raise
     except Exception as e:
         LOG.error("Server connection failured")

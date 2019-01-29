@@ -45,8 +45,8 @@ def trigger_auto_support_bundle(operation_type, dispatch_type):
             result.raise_for_status()
             LOG.info("Trigger AutoSupport bundle attempt succeeded")
             response_data = result.json()
-        except Exception as e:
-            LOG.error("Trigger AutoSupport bundle attempt failed")
+        except requests.HTTPError as e:
+            LOG.error("Trigger AutoSupport bundle attempt failed || http status code: %s" % str(e.response.status_code))
             raise
 
         LOG.info("Retrieving job data for %s." % (response_data['jobId']))
@@ -56,8 +56,8 @@ def trigger_auto_support_bundle(operation_type, dispatch_type):
             response_data = result.json()
             LOG.info("AutoSupport job retrieval request succeeded")
             LOG.info("Job data:\n%s" % str(response_data))
-        except Exception as e:
-            LOG.error("AutoSupport job retrieval request failed")
+        except requests.HTTPError as e:
+            LOG.error("AutoSupport job retrieval request failed || http status code: %s" % str(e.response.status_code))
             raise
     except Exception as e:
         LOG.error("Server connection failure")
